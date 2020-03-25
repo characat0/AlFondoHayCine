@@ -65,7 +65,7 @@ apiRoute.post('/', (req, res) => {
     })
 });
 
-apiRoute.post('/', (req, res) => {
+apiRoute.post('/fs', (req, res) => {
     const { key } = req.query;
     const app : Application = req.app;
     const io: SocketIO.Server = app.get("io");
