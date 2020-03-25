@@ -2,7 +2,9 @@ const socket = io({ transports: ['websocket']});
 const video = document.getElementById("mse");
 let mediaSource = new MediaSource(), sourceBuffer, bufferado = 0;
 function appendData(data) {
-    if (sourceBuffer) sourceBuffer.appendBuffer(new Uint8Array(data));
+    if (sourceBuffer) return sourceBuffer.appendBuffer(new Uint8Array(data));
+    setTimeout(() => appendData(data), 10);
+    console.log("No hay source buffer, Marco pedazo de animal");
 }
 video.onseeking = function () {
     if (video.currentTime > bufferado - 10)
@@ -18,9 +20,9 @@ if (!MediaSource.isTypeSupported(mime))
     alert("Dispositivo no soportado u.u");
 
 socket.on('start', (initData) => {
+    if (initData) prepare();
     initData = initData || {};
     initStream(initData);
-    prepare();
 });
 socket.on('viewers', (viewerCount) => {
     const viewers = document.getElementById('Contador');

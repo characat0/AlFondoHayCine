@@ -1,7 +1,7 @@
 import * as express from "express";
 import { Server } from "http";
 import {Application} from "express";
-import { viewers, segmenter } from "./constants";
+import {viewers, segmenter, videoInfo} from "./constants";
 import * as SocketIO from "socket.io";
 import { indexRoute } from "./routes";
 import { apiRoute } from "./routes/api";
@@ -23,6 +23,7 @@ setInterval(() => {
 }, 2000);
 
 io.on('connection', socket => {
+    socket.emit('start', app.get(videoInfo));
     const mp4Seg: Mp4Segmenter = app.get(segmenter);
     app.set(viewers, app.get(viewers) + 1);
     console.log("User connected!");
