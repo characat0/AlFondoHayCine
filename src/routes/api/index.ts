@@ -76,6 +76,7 @@ apiRoute.post('/fs', (req, res) => {
         res.sendStatus(403);
         return ;
     }
+    res.sendStatus(200);
     const { ruta } = req.query;
     receiving = true;
     io.emit('start');
