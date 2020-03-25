@@ -2,7 +2,15 @@ const socket = io({ transports: ['websocket']});
 const video = document.getElementById("mse");
 let mediaSource = new MediaSource(), sourceBuffer, bufferado = 0;
 function appendData(data) {
-    if (sourceBuffer) return sourceBuffer.appendBuffer(new Uint8Array(data));
+    if (sourceBuffer) {
+        if (sourceBuffer.updating) {
+            console.log("Vamo a esperar unas fracciones de segundo a ver si funciona");
+            console.log("Porque ahora no esta funcionando u.u");
+            return setTimeout(() => appendData(data), 50);
+        }
+        return sourceBuffer.appendBuffer(new Uint8Array(data));
+    }
+
     setTimeout(() => appendData(data), 100);
     console.log("No hay source buffer, Marco pedazo de animal");
 }
