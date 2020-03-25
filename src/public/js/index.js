@@ -35,6 +35,7 @@ function prepare () {
     if (!prepared) {
         socket.on('data', appendData);
         mediaSource.addEventListener('sourceopen', sourceOpen);
+        mediaSource.addEventListener('sourceclose', sourceClose);
     }
     prepared = true;
 
@@ -45,12 +46,11 @@ function prepare () {
         sourceBuffer.addEventListener('updateend', () => {
             const buff = video.buffered;
             bufferado = buff.length ? buff.end(buff.length - 1) : 0;
-            mediaSource.duration = bufferado;
+            mediaSource.duration = bufferado + 0;
         })
     }
     function sourceClose() {
         console.log("Source closed!");
-        socket.removeListener('data', appendData);
     }
 }
 function initStream(initData) {
