@@ -6,6 +6,7 @@ import * as SocketIO from "socket.io";
 import { indexRoute } from "./routes";
 import { apiRoute } from "./routes/api";
 import { Mp4Segmenter } from "./lib/Mp4Segmenter";
+import { PORT } from "./config";
 
 const app: Application = express();
 const server: Server = new Server(app);
@@ -38,7 +39,7 @@ io.on('connection', socket => {
 app.use('/', indexRoute);
 app.use('/api', apiRoute);
 
-server.listen(3000, () => {
+server.listen(PORT, () => {
     console.log("Running");
 });
 
