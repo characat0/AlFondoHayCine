@@ -31,7 +31,7 @@ io.on('connection', socket => {
         console.log("Emitiendo data");
         socket.emit('data', data);
     };
-    if (mp4Seg.initSegment) emitData(mp4Seg.initSegment);
+    if (mp4Seg.initSegment) setTimeout(() => emitData(mp4Seg.initSegment), 100);
     mp4Seg.on('data', emitData);
     socket.on('disconnect', () => {
         socket.removeListener('data', emitData);

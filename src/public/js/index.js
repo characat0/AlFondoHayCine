@@ -3,7 +3,7 @@ const video = document.getElementById("mse");
 let mediaSource = new MediaSource(), sourceBuffer, bufferado = 0;
 function appendData(data) {
     if (sourceBuffer) return sourceBuffer.appendBuffer(new Uint8Array(data));
-    setTimeout(() => appendData(data), 10);
+    setTimeout(() => appendData(data), 100);
     console.log("No hay source buffer, Marco pedazo de animal");
 }
 video.onseeking = function () {
@@ -28,12 +28,16 @@ socket.on('viewers', (viewerCount) => {
     const viewers = document.getElementById('Contador');
     viewers.innerText = "Personas conectadas: " + viewerCount;
 });
-socket.on('data', appendData);
 socket.on('finish', () => alert('Transmision en vivo terminada.'));
+let prepared = false;
 function prepare () {
     video.src = URL.createObjectURL(mediaSource);
-    mediaSource.addEventListener('sourceopen', sourceOpen);
-    mediaSource.addEventListener('sourceclose', sourceClose);
+    if (!prepared) {
+        socket.on('data', appendData);
+        mediaSource.addEventListener('sourceopen', sourceOpen);
+    }
+    prepared = true;
+
     function sourceOpen() {
         console.log("Source open!", mediaSource.readyState);
         sourceBuffer = mediaSource.addSourceBuffer(mime);
@@ -41,17 +45,15 @@ function prepare () {
         sourceBuffer.addEventListener('updateend', () => {
             const buff = video.buffered;
             bufferado = buff.length ? buff.end(buff.length - 1) : 0;
-            mediaSource.duration = bufferado + 30;
+            mediaSource.duration = bufferado;
         })
     }
     function sourceClose() {
         console.log("Source closed!");
-        mediaSource.removeSourceBuffer(sourceBuffer);
-        sourceBuffer = null;
-        mediaSource = new MediaSource();
+        socket.removeListener('data', appendData);
     }
 }
 function initStream(initData) {
     const title = document.getElementById('titulo');
-    title.innerText = "Ahora viendo: " + initData.title;
+    title.innerText = "Ahora viendo:\n" + initData.title;
 }
