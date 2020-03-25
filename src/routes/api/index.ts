@@ -3,6 +3,7 @@ import SocketIO = require("socket.io");
 import { APIKEY } from "../../config";
 import { Mp4Segmenter } from "../../lib/Mp4Segmenter";
 import { segmenter } from "../../constants";
+import * as FFmpeg from "fluent-ffmpeg";
 
 export const apiRoute = Router();
 
@@ -62,4 +63,35 @@ apiRoute.post('/', (req, res) => {
         app.set(segmenter, new Mp4Segmenter());
         io.emit('finish');
     })
+});
+
+apiRoute.post('/', (req, res) => {
+    const { key } = req.query;
+    const app : Application = req.app;
+    const io: SocketIO.Server = app.get("io");
+
+    if (receiving || !key || key !== APIKEY || !req.on || !io.emit)
+        res.sendStatus(403);
+    const { ruta } = req.query;
+    receiving = true;
+    io.emit('start');
+    const mp4Segmenter: Mp4Segmenter = app.get(segmenter);
+    const command = FFmpeg({ source: ruta });
+    command
+        .withInputOption('-loglevel', 'debug')
+        .withInputOptions(['-re'])
+        .fromFormat('mp4')
+        .withVideoCodec('copy')
+        .toFormat('mp4')
+        .addOptions('-movflags', '+frag_keyframe+empty_moov+default_base_moof')
+        .writeToStream(mp4Segmenter);
+
+    mp4Segmenter.on('error', (e) => {
+        mp4Segmenter.removeAllListeners('data');
+        app.set(segmenter, new Mp4Segmenter());
+        io.emit('finish');
+        mp4Segmenter.destroy();
+        console.error(e);
+        receiving = false;
+    });
 });
