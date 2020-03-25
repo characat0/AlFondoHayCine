@@ -14,8 +14,10 @@ apiRoute.post('/', (req, res) => {
     const app : Application = req.app;
     const io: SocketIO.Server = app.get("io");
 
-    if (receiving || !key || key !== APIKEY || !req.on || !io.emit)
+    if (receiving || !key || key !== APIKEY || !req.on || !io.emit) {
         res.sendStatus(403);
+        return ;
+    }
     console.log("Recibiendo transmision!");
     receiving = true;
     io.emit('start');
@@ -70,8 +72,10 @@ apiRoute.post('/fs', (req, res) => {
     const app : Application = req.app;
     const io: SocketIO.Server = app.get("io");
 
-    if (receiving || !key || key !== APIKEY || !req.on || !io.emit)
+    if (receiving || !key || key !== APIKEY || !req.on || !io.emit) {
         res.sendStatus(403);
+        return ;
+    }
     const { ruta } = req.query;
     receiving = true;
     io.emit('start');
