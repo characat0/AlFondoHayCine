@@ -91,7 +91,14 @@ apiRoute.post('/fs', (req, res) => {
         .toFormat('mp4')
         .addOptions('-movflags', '+frag_keyframe+empty_moov+default_base_moof')
         .writeToStream(mp4Segmenter);
-
+    const stream = command.pipe();
+    stream.on('data', chunk => {
+        console.log(chunk);
+    });
+    stream.on('error', (err, stdout, stderr) => {
+        console.log("ffmpeg stdout:\n" + stdout);
+        console.log("ffmpeg stderr:\n" + stderr);
+    });
     command.on('error', console.error);
     mp4Segmenter.on('error', (e) => {
         mp4Segmenter.removeAllListeners('data');
