@@ -7,6 +7,7 @@ import { indexRoute } from "./routes";
 import { apiRoute } from "./routes/api";
 import { Mp4Segmenter } from "./lib/Mp4Segmenter";
 import { PORT } from "./config";
+import * as path from "path";
 
 const app: Application = express();
 const server: Server = new Server(app);
@@ -19,7 +20,7 @@ app.set(segmenter, mp4Segmenter);
 
 setInterval(() => {
     io.emit('viewers', app.get(viewers));
-}, 5000);
+}, 2000);
 
 io.on('connection', socket => {
     const mp4Seg: Mp4Segmenter = app.get(segmenter);
@@ -29,8 +30,7 @@ io.on('connection', socket => {
         console.log("Emitiendo data");
         socket.emit('data', data);
     };
-    if (mp4Seg.initSegment)
-        emitData(mp4Seg.initSegment);
+    if (mp4Seg.initSegment) emitData(mp4Seg.initSegment);
     mp4Seg.on('data', emitData);
     socket.on('disconnect', () => {
         socket.removeListener('data', emitData);
@@ -39,6 +39,8 @@ io.on('connection', socket => {
         mp4Seg.removeListener('data', emitData);
     })
 });
+
+app.use('/public', express.static(path.resolve(__dirname, '../src/public')));
 
 app.use('/', indexRoute);
 app.use('/api', apiRoute);
