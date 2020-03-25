@@ -28,6 +28,7 @@
             alert("Dispositivo no soportado u.u");
 
         socket.on('start', prepare);
+        socket.on('viewers', console.log);
         socket.on('data', appendData);
         socket.on('finish', () => alert('Transmision en vivo terminada.'));
         function prepare () {

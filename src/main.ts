@@ -17,6 +17,10 @@ app.set('io', io);
 app.set(viewers, 0);
 app.set(segmenter, mp4Segmenter);
 
+setInterval(() => {
+    io.emit('viewers', app.get(viewers));
+}, 5000);
+
 io.on('connection', socket => {
     const mp4Seg: Mp4Segmenter = app.get(segmenter);
     app.set(viewers, app.get(viewers) + 1);
