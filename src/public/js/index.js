@@ -6,7 +6,7 @@ function appendData(data) {
         if (sourceBuffer.updating) {
             console.log("Vamo a esperar unas fracciones de segundo a ver si funciona");
             console.log("Porque ahora no esta funcionando u.u");
-            return setTimeout(() => appendData(data), 50);
+            return setTimeout(() => appendData(data), 100);
         }
         return sourceBuffer.appendBuffer(new Uint8Array(data));
     }

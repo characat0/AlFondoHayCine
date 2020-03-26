@@ -26,7 +26,7 @@ io.on('connection', socket => {
     socket.emit('start', app.get(videoInfo));
     const mp4Seg: Mp4Segmenter = app.get(segmenter);
     app.set(viewers, app.get(viewers) + 1);
-    console.log("User connected!");
+    console.log("User connected!", socket.id);
     const emitData: ((data: Buffer) => void) = data => {
         console.log("Emitiendo data");
         socket.emit('data', data);
@@ -35,7 +35,7 @@ io.on('connection', socket => {
     mp4Seg.on('data', emitData);
     socket.on('disconnect', () => {
         socket.removeListener('data', emitData);
-        console.log("User disconnected");
+        console.log("User disconnected", socket.id);
         app.set(viewers, app.get(viewers) - 1);
         mp4Seg.removeListener('data', emitData);
     })
