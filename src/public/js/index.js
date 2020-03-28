@@ -1,6 +1,7 @@
 const socket = io({ transports: ['websocket']});
 const video = document.getElementById("mse");
 let mediaSource = new MediaSource(), sourceBuffer, bufferado = 0;
+let user;
 function appendData(data) {
     if (sourceBuffer) {
         if (sourceBuffer.updating) {
@@ -34,9 +35,27 @@ socket.on('start', (initData) => {
 });
 socket.on('viewers', (viewerCount) => {
     const viewers = document.getElementById('Contador');
-    viewers.innerText = "Personas conectadas: " + viewerCount;
+    viewers.innerText = "Viendo ahora:\t" + viewerCount;
 });
+
 socket.on('finish', () => alert('Transmision en vivo terminada.'));
+socket.on('message', console.log);
+
+
+const mensajeria = document.getElementById('comentario');
+mensajeria.addEventListener('keyup', (e) => {
+    if (e.key === 'Enter' && mensajeria.value.length > 0) {
+        const mensaje = {
+            userId: user,
+            message: mensajeria.value
+        };
+        socket.emit('sendMessage', mensaje);
+        mensajeria.value = '';
+    }
+});
+
+
+
 let prepared = false;
 function prepare () {
     video.src = URL.createObjectURL(mediaSource);
@@ -54,7 +73,7 @@ function prepare () {
         sourceBuffer.addEventListener('updateend', () => {
             const buff = video.buffered;
             bufferado = buff.length ? buff.end(buff.length - 1) : 0;
-            mediaSource.duration = bufferado + 0;
+            mediaSource.duration = bufferado;
         })
     }
     function sourceClose() {
@@ -62,6 +81,7 @@ function prepare () {
     }
 }
 function initStream(initData) {
+    user = initData.userId || 'Usuario';
     const title = document.getElementById('titulo');
-    title.innerText = "Ahora viendo:\n" + initData.title;
+    title.innerText = 'La dirección de Cultura presenta: ' + (initData.title || '');
 }

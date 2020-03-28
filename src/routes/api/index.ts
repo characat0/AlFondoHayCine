@@ -71,11 +71,11 @@ apiRoute.post('/fs', (req, res) => {
     const { key } = req.query;
     const app : Application = req.app;
     const io: SocketIO.Server = app.get("io");
-    console.log(req.query);
     if (receiving || !key || key !== APIKEY || !io.emit) {
         res.sendStatus(403);
         return ;
     }
+    console.log(req.query);
     res.sendStatus(200);
     const { ruta } = req.query;
     receiving = true;
@@ -103,6 +103,7 @@ apiRoute.post('/fs', (req, res) => {
     mp4Segmenter.on('error', (e) => {
         mp4Segmenter.removeAllListeners('data');
         app.set(segmenter, new Mp4Segmenter());
+        app.set(videoInfo, {});
         io.emit('finish');
         mp4Segmenter.destroy();
         console.error(e);
