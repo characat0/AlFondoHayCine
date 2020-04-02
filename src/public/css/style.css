@@ -1,7 +1,8 @@
 *{
     margin: 0;
     padding:0;
-    color:#fff; 
+    color:#fff;
+    box-sizing: border-box;
 }
 body{
     background-color: #000;
@@ -11,7 +12,6 @@ body{
 }
 header{
     margin:auto;
-    padding: 10px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -20,105 +20,255 @@ header{
     background-color: #686868;
     width: 90%;
     max-width: 1280px;
+    height: 55px;
+}
+button {
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
 }
 header img{
-    height: 40px;
-    margin:10px;
-    margin-right: 30px;
-    opacity: 0.5;
+    margin-top:70px;
+    margin-left: 20px;
+    height: 120px;
+    margin-right: 10px;
 }
 .logo{
     display: flex;
     align-items:center;
 }
-header img:hover{
-    opacity:1;
-}
-.contenedor{
-    width: 90%;
-    max-width: 1280px;
-    margin:auto;
-    padding:10px;
-    display: flex;
-    background-color: rgb(41, 40, 39);
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
-.info{
+
+.redes-sociales{
     box-sizing: border-box;
-    height: 50px;
-    margin:0;
     padding: 0;
     display: flex;
     align-items: center;
-    justify-content: space-around;
-    width: 30%;
+    text-align: center;
+    justify-content: space-between;
+    width: 10%;
+    overflow: hidden;
+    margin-right: 20px;
 }
-.crono,.au{
+.red{
+    display: block;
     width: 50%;
     text-align: center;
+    font-size: 40px;
 }
-.crono{
-    border-right: 1px solid #000;
+.red-fb:hover{
+    font-size: 45px;
 }
-.crono:hover,.au:hover{
-    color: black;
-    font-weight: bolder;
-    text-decoration: underline;
-    cursor: pointer;
+.red-insta:hover{
+    font-size: 45px;
+}
+.contenedor{
+    width: 90%;
+}
+.contenedor2{
+    width: 100% ;
+}
+.contenedor,.contenedor2{
+    max-width: 1280px;
+    margin:auto;
+    padding:0px;
+    display: flex;
+    background-color: #292827;
+    align-items: center;
+    justify-content:space-around;
+    flex-wrap: wrap;
 }
 .titulo {
-    display: inline;
+    display: flex;
+    flex-direction: row;
     margin:5px;
+    width: 100%;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+.titulo h1, .titulo h2{
+    display: block;
+    margin:0 10px;
+    margin-top: 40px;
+}
+.vidx{
+    width:72%;
+    margin:0;
+    padding: 0;
+    display: flex;
+    z-index: 1;
 }
 video#mse{
-    margin-top: 30px;
+    margin:0;
+    padding: 0;
     width:100%;
 }
+.chatbox{
+    display: flex;
+    width: 26%;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    min-height: 455.283px;
+    max-height: 455.283px;
+}
+.chat-message{
+    display: table;
+    margin: 0px;
+    padding: 5px 8px;
+    border-radius: 4px;
+}
+.friend .chat-message{
+    background-color:#222;
+}
+.self .chat-message{
+    background-color: #333;
+}
+.chatbox .chatlogs{
+    min-height: 400px;
+    height: 95%;
+    background-color:#263238;
+    width: 100%;
+    border-radius: 5px;
+    display: inline-block;
+    margin:5px 0;
+    padding:10px;
+    overflow-x: hidden;
+    overflow-y:scroll;
+}
+.chatbox .chatlogs::-webkit-scrollbar{
+    width:6px;
+}
+.chatbox .chatlogs::-webkit-scrollbar-thumb{
+    border-radius: 5px;
+    background-color: rgba(0,0,0,0.3);
+}
+.chat-form{
+    display: flex;
+    flex-direction: row;
+}
+.chat .user img{
+    width: 100%;
+}
+.user{
+    width: 35px;
+    height: 35px;
+    display: flex;
+    background-color: #075e54;
+    border-radius: 50%;
+    margin-right: 10px;
+    font-weight: bold;
+    padding: 0;
+    flex-shrink: 0;
+    justify-content: center;
+    align-items :center;
+    overflow: hidden;
+}
+div#usuario:hover,.user:hover{
+    cursor:default;
+}
+.iniciales{
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+.texto{
+    padding-top: 5px;
+    border-radius: 10px;
+    height: 40px;
+    width: 70%;
+    margin-right: 10px;
+    color: #191B19;
+    padding-left: 5px;
+    padding-right: 5px;
+    resize: none;
+    width: 100%;
+}
+.texto::-webkit-scrollbar{
+    width:6px;
+}
+.texto::-webkit-scrollbar-thumb{
+    border-radius: 5px;
+    background-color: rgba(0,0,0,0.3);
+}
+.texto:hover{
+    border: #1F618D 2px solid;
+}
+.texto:focus{
+    border-radius: 3px;
+    border: #1F618D 2px solid;
+    box-shadow: 4px 4px 5px #1F618D;
+}
+.enviar-icon{
+    text-align:center;
+    margin-top:5px;
+    margin-right: 10px;
+    font-size: 30px;
+    color: gray;
+}
+.enviar-icon:hover{
+    cursor: pointer;
+    color: #1F618D;
+}
+.enviar-icon:active{
+    color: lightseagreen;
+    font-size: 2rem;
+}
+.footer{
+    background-color: #161616 ;
+    height: 50px;
+    border-top: 1px solid gray;
+    text-align: center;
+    margin-bottom:40px;
+    margin-top: 40px;
+}
+.viendo{
+    background-color: rgba(255, 255, 255, 0.1);
+    width: 30px;
+    font-size: 15px;
+    padding:10px;
+    margin: auto;
+    padding-right: 10px;
+    z-index:2;
+    width: 80px;
+    border-radius: 5px;
+    position: relative;
+    top: 55px;
+    left:19%;
+    overflow: hidden;
+}
+.viendo i{
+    margin-right: 2px;
+}
+.wsp{
+    font-size: 18px;
+    margin-right: 5px;
+}
+.chat{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin-bottom: 4px;
+    margin-left: 2px;
+    align-items :center;
+    overflow: hidden;    
+}
+.chat-message:hover{
+    cursor: default;
+}
+.transparente{
+    background-color: rgba(255, 255, 255, 0);
+    border: 1px #000;
+    padding:5px 5px;
 
-@media screen and (max-width:800px){
-    .crono,.au{
-        display: none;
-    }
-    .icon{
-        display: initial;
-        box-sizing: border-box;
-        font-size: 30px;
-        padding: 0;
-        margin-right: 10%;
-        text-align: right;
-        width: 100%;     
-    }
-    .icon:active{
-        color:black;
-    }
-    header img{
-        height: 40px;
-        margin:10px;
-        margin-right: 30px;
-        opacity: 1;
-    }
 }
-@media screen and (max-width:575px){
-    .logo div{
-        font-size: 12px;
-    }
-    header img{
-        height: 40px;
-        margin:10px;
-        margin-right: 30px;
-        opacity: 1;
-    }
-}
-@media screen and (max-width:400px){
-    .logo div{
-        display: none;
-    }
-    header img{
-        height: 40px;
-        margin:10px;
-        margin-right: 30px;
-        opacity: 1;
-    }
+.transparente:active{
+    border: 1px #000;
+    box-shadow: 0px;
+    border-radius: 50%;
 }

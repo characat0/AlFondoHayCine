@@ -60,7 +60,7 @@ io.on('connection', socket => {
     };
     const emitMessage: ((message: Message) => void) = message => {
         console.log(message);
-        io.emit('message', message);
+        io.emit('chatMessage', message);
     };
 
     if (mp4Seg.initSegment) setTimeout(() => emitData(mp4Seg.initSegment), 100);

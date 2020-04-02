@@ -38,7 +38,7 @@ function fillData() {
 
 function onViewers(count) {
     const viewers = document.getElementById('Contador');
-    viewers.innerText = "Viendo ahora: \t" + count;
+    viewers.innerText = '\t' + count;
 }
 
 function onChatMessage(message) {
@@ -66,6 +66,30 @@ function sourceOpen() {
 function sourceClose() {
     console.log("Source closed!");
 }
+const mensajeria = document.getElementById('msg-text');
+mensajeria.addEventListener('keyup', (e) => {
+    if (e.key === 'Enter' && mensajeria.value.length > 0) {
+        const mensaje = {
+            clientId: socketHandler.id,
+            message: mensajeria.value,
+            userTitle,
+            iniciales
+        };
+        socketHandler.socket.emit('sendMessage', mensaje);
+        mensajeria.value = '';
+    }
+});
+const botoncito = document.getElementById('sendMessage');
+botoncito.onclick = () => {
+    const mensaje = {
+        clientId: socketHandler.id,
+        message: mensajeria.value,
+        userTitle,
+        iniciales
+    };
+    socketHandler.socket.emit('sendMessage', mensaje);
+    mensajeria.value = '';
+};
 
 
 

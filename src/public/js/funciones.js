@@ -1,28 +1,59 @@
-function enviar(){
-    var mensaje = document.getElementById('msg-text').value;
-    var iniciales = document.getElementById('usuario');
+let userTitle, iniciales;
+window.onload  = function(){
+    document.getElementById("primero").onclick = seleccionarPrimero;
+    document.getElementById("segundo").onclick = seleccionarSegundo;
+    document.getElementById("nombre-apellido").onclick = nickname;
+}
+function seleccionarPrimero(){
+    var primero =  document.getElementById("uno");
+    var segundo =  document.getElementById("dos");
+    primero.className="selected";
+    segundo.className="opcion";
+}
+function seleccionarSegundo(){
+    var primero =  document.getElementById("uno");
+    var segundo =  document.getElementById("dos");
+    primero.className="opcion";   
+    segundo.className="selected";
+}
+function titulo(name,lastname){
+    var title = name+" "+lastname;
+    return title;
+}
+function eliminarDiv(divNone){
+    return document.getElementById(divNone).style.display="none";
 
-    //--------Creando nodo
-    var caja= document.createElement('div');
-    var texto= document.createTextNode(mensaje);
-    //----- Poniendo el texto dentro del div
-    caja.appendChild(texto);
-    //--- Poniendo el atributo class al div caja
-    caja.setAttribute('class','globo');
-    
-    //--- Creando el nodo para meter mis dos cosas
-    var nuevo = document.createElement('div');
-    nuevo.setAttribute('class','union');
-    //--- Definiendo las variables para introducir el div nuevo
-    var union=document.getElementById('union');
+}function activarDiv(divInitial){
+    return document.getElementById(divInitial).style.display="initial";
 
-
-
-
-    //--- Probando :'v
-    /*union.apendTo(iniciales);
-    union.apendTo(caja);
-
-    //---Poniendo el div dentro del otro div :'v
-    msgbox.apendTo(union);*/
+}
+function nickname(){
+    var nombre = document.getElementById("firstName").value;
+    var apellido = document.getElementById("lastName").value;
+    userTitle = titulo(nombre,apellido);
+    var v1 = nombre.toUpperCase(), v2=apellido.toUpperCase();
+    var letterNombre= v1[0];var letterApellido= v2[0];
+    iniciales=letterNombre+letterApellido;
+    if(!isNaN(parseInt(nombre)) || !isNaN(parseInt(apellido))){
+        if(nombre!=="" && apellido!==""){
+            eliminarDiv("inicio");
+            eliminarDiv("insiste");
+            activarDiv("nonumero");
+        }else{
+            eliminarDiv("inicio");
+            eliminarDiv("nonumero");
+            activarDiv("insiste");
+        }   
+    }else{
+        if(nombre!=="" && apellido!==""){
+            eliminarDiv("inicio");
+            eliminarDiv("insiste");
+            activarDiv("nonumero");
+            eliminarDiv("solohazlo");
+        }else{
+            eliminarDiv("inicio");
+            eliminarDiv("nonumero");
+            activarDiv("insiste");
+        }  
+    }
 }
