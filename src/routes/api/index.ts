@@ -79,9 +79,19 @@ apiRoute.post('/fs', (req, res) => {
     res.sendStatus(200);
     const { ruta } = req.query;
     receiving = true;
-    io.emit('start', req.query);
+    //io.emit('start', req.query);
     app.set(videoInfo, req.query);
     const mp4Segmenter: Mp4Segmenter = app.get(segmenter);
+    mp4Segmenter.on('initSegment', (initSegment) => {
+        const data = {
+            videoData: app.get(videoInfo),
+            initSegment
+        };
+        io.emit('start', data);
+    });
+    mp4Segmenter.on('data', (data:Buffer) => {
+        console.log('data', data.length);
+    })
     const command = FFmpeg({ source: ruta });
     command
         .withInputOption('-loglevel', 'debug')

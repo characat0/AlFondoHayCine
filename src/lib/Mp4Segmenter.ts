@@ -33,7 +33,7 @@ export class Mp4Segmenter extends Transform {
 
     set initSegment(value : Buffer) {
         this._initSegment = value;
-        this.emit('data', this._initSegment);
+        this.emit('initSegment', this._initSegment);
     }
 
     _findFtyp(chunk: Buffer) : void | never  {

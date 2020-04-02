@@ -1,4 +1,4 @@
-const socket = io({ transports: ['websocket']});
+const socket = io({ transports: ['polling', 'websocket'], reconnection: false });
 const video = document.getElementById("mse");
 let mediaSource = new MediaSource(), sourceBuffer, bufferado = 0;
 let user;

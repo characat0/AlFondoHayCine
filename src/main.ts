@@ -24,13 +24,38 @@ setInterval(() => {
     io.emit('viewers', app.get(viewers));
 }, 2500);
 
+const clients = new Set();
+
+
 io.on('connection', socket => {
-    socket.emit('start', app.get(videoInfo));
+    console.log(new Date(Date.now()));
+    //socket.emit('start', app.get(videoInfo));
     const mp4Seg: Mp4Segmenter = app.get(segmenter);
     app.set(viewers, app.get(viewers) + 1);
     console.log("User connected!", socket.id);
+    let eliminacion = setTimeout(() => {
+        socket.disconnect();
+    }, 5000);
+    socket.on('clientId', (clientId) => {
+        if (eliminacion) {
+            clearTimeout(eliminacion);
+            eliminacion = null;
+        }
+        const data = {
+            videoData: app.get(videoInfo),
+            initSegment: mp4Seg.initSegment
+        };
+        console.log(clientId);
+        if (clients.has(clientId)) {
+            console.log('Yala');
+        } else {
+            console.log('Nola');
+            if (mp4Seg.initSegment !== null) socket.emit('start', data);
+            clients.add(clientId);
+        }
+    });
     const emitData: ((data: Buffer) => void) = data => {
-        console.log("Emitiendo data");
+        console.log(`Emitiendo data al socket ${socket.id}`);
         socket.emit('data', data);
     };
     const emitMessage: ((message: Message) => void) = message => {
