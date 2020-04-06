@@ -17,7 +17,12 @@ function appendData(data) {
             console.log("Porque ahora no esta funcionando u.u");
             return setTimeout(() => appendData(data), 100);
         }
-        return sourceBuffer.appendBuffer(new Uint8Array(data));
+        try {
+            return sourceBuffer.appendBuffer(new Uint8Array(data));
+        } catch (e) {
+            reset();
+            console.error(e, new Date(Date.now()));
+        }
     }
 
     setTimeout(() => appendData(data), 100);
@@ -28,6 +33,29 @@ function onStart(startData) {
     initSegment = startData.initSegment;
     appendData(startData.initSegment);
     fillData();
+}
+
+function reset() {
+    socketHandler.clearAllListeners();
+    mediaSource = new MediaSource();
+    video.src = URL.createObjectURL(mediaSource);
+    mediaSource.onsourceopen = () => {
+        sourceBuffer = mediaSource.addSourceBuffer(mime);
+        sourceBuffer.mode = 'sequence';
+        appendData(initSegment);
+        sourceBuffer.addEventListener('updateend', () => {
+            const buff = video.buffered;
+            bufferado = buff.length ? buff.end(buff.length - 1) : 0;
+            mediaSource.duration = bufferado;
+        });
+        socketHandler.registerListerners({
+            onData: appendData,
+            onChatMessage,
+            onStart,
+            onViewers
+        });
+    };
+    mediaSource.onsourceclose = sourceClose;
 }
 
 function fillData() {

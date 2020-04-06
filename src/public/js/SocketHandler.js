@@ -8,7 +8,7 @@ class SocketHandler {
     constructor(io) {
         this.io = io;
         this.id = uuidv4();
-        this.socket = io({ transports: ['polling', 'websocket'], reconnection: false, autoConnect: false });
+        this.socket = io({ transports: ['polling', 'websocket'], reconnection: false, autoConnect: false, rejectUnauthorized: false });
         this.connected = false;
         this.listeners = {};
     }
@@ -47,5 +47,13 @@ class SocketHandler {
             return;
         }
         console.log('no hay necesidad de reiniciar.');
+    }
+    clearAllListeners() {
+        this.socket.removeAllListeners('start');
+        this.socket.removeAllListeners('data');
+        this.socket.removeAllListeners('viewers');
+        this.socket.removeAllListeners('chatMessage');
+        this.socket.removeAllListeners('connect');
+        this.socket.removeAllListeners('disconnect');
     }
 }
