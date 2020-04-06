@@ -1,23 +1,27 @@
 import * as fs from "fs";
 import * as os from "os";
 import * as express from "express";
-import { Server } from "https";
+import * as https from "https";
+import * as http from "http";
 import {Application} from "express";
 import {viewers, segmenter, videoInfo} from "./constants";
 import * as SocketIO from "socket.io";
 import { indexRoute } from "./routes";
 import { apiRoute } from "./routes/api";
 import { Mp4Segmenter } from "./lib/Mp4Segmenter";
-import { PORT } from "./config";
+import { PORT, PROTOCOL } from "./config";
 import * as path from "path";
 import { Message } from "./lib/Message";
 
 
+const Server = PROTOCOL === "HTTPS" ? https.Server : http.Server;
 const app: Application = express();
-const server: Server = new Server({
+const server: https.Server | http.Server =  PROTOCOL === "HTTPS" ?
+    new Server({
     key: fs.readFileSync(path.resolve(os.homedir(), 'server.key')),
     cert: fs.readFileSync(path.resolve(os.homedir(), 'server.cert'))
-}, app);
+}, app) :
+    new Server(app);
 const io : SocketIO.Server = SocketIO(server);
 const mp4Segmenter = new Mp4Segmenter();
 
