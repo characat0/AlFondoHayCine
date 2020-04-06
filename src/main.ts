@@ -1,5 +1,7 @@
+import * as fs from "fs";
+import * as os from "os";
 import * as express from "express";
-import { Server } from "http";
+import { Server } from "https";
 import {Application} from "express";
 import {viewers, segmenter, videoInfo} from "./constants";
 import * as SocketIO from "socket.io";
@@ -12,7 +14,10 @@ import { Message } from "./lib/Message";
 
 
 const app: Application = express();
-const server: Server = new Server(app);
+const server: Server = new Server({
+    key: fs.readFileSync(path.resolve(os.homedir(), 'server.key')),
+    cert: fs.readFileSync(path.resolve(os.homedir(), 'server.cert'))
+}, app);
 const io : SocketIO.Server = SocketIO(server);
 const mp4Segmenter = new Mp4Segmenter();
 
