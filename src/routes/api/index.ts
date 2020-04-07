@@ -80,6 +80,9 @@ apiRoute.post('/fs', (req, res) => {
     const { ruta } = req.query;
     receiving = true;
     //io.emit('start', req.query);
+    delete req.query.key;
+    delete req.query.ruta;
+    req.query.fechaInicio = new Date(Date.now());
     app.set(videoInfo, req.query);
     const mp4Segmenter: Mp4Segmenter = app.get(segmenter);
     mp4Segmenter.on('initSegment', (initSegment) => {
