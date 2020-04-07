@@ -26,6 +26,7 @@ const server: https.Server | http.Server =  PROTOCOL === "HTTPS" ?
 const io : SocketIO.Server = SocketIO(server);
 const mp4Segmenter = new Mp4Segmenter();
 
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.set('io', io);
 app.set(viewers, 0);
