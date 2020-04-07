@@ -12,6 +12,7 @@ import { Mp4Segmenter } from "./lib/Mp4Segmenter";
 import { PORT, PROTOCOL } from "./config";
 import * as path from "path";
 import { Message } from "./lib/Message";
+import * as bodyParser from "body-parser";
 
 
 const Server = PROTOCOL === "HTTPS" ? https.Server : http.Server;
@@ -25,6 +26,7 @@ const server: https.Server | http.Server =  PROTOCOL === "HTTPS" ?
 const io : SocketIO.Server = SocketIO(server);
 const mp4Segmenter = new Mp4Segmenter();
 
+app.use(bodyParser.json());
 app.set('io', io);
 app.set(viewers, 0);
 app.set(segmenter, mp4Segmenter);

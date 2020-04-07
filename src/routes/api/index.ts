@@ -82,8 +82,8 @@ apiRoute.post('/fs', (req, res) => {
     //io.emit('start', req.query);
     delete req.query.key;
     delete req.query.ruta;
-    req.query.fechaInicio = new Date(Date.now());
-    app.set(videoInfo, req.query);
+    req.body.fechaInicio = new Date(Date.now());
+    app.set(videoInfo, req.body);
     const mp4Segmenter: Mp4Segmenter = app.get(segmenter);
     mp4Segmenter.on('initSegment', (initSegment) => {
         const data = {
@@ -94,7 +94,7 @@ apiRoute.post('/fs', (req, res) => {
     });
     mp4Segmenter.on('data', (data:Buffer) => {
         console.log('data', data.length);
-    })
+    });
     const command = FFmpeg({ source: ruta });
     command
         .withInputOption('-loglevel', 'debug')
