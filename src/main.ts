@@ -9,7 +9,7 @@ import * as SocketIO from "socket.io";
 import { indexRoute } from "./routes";
 import { apiRoute } from "./routes/api";
 import { Mp4Segmenter } from "./lib/Mp4Segmenter";
-import { PORT, PROTOCOL } from "./config";
+import {ORIGINS, PORT, PROTOCOL} from "./config";
 import * as path from "path";
 import { Message } from "./lib/Message";
 import * as bodyParser from "body-parser";
@@ -24,6 +24,7 @@ const server: https.Server | http.Server =  PROTOCOL === "HTTPS" ?
 }, app) :
     new Server(app);
 const io : SocketIO.Server = SocketIO(server);
+io.origins(ORIGINS);
 const mp4Segmenter = new Mp4Segmenter();
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -32,8 +33,11 @@ app.set('io', io);
 app.set(viewers, 0);
 app.set(segmenter, mp4Segmenter);
 
+let views: number = 0;
 setInterval(() => {
-    io.emit('viewers', app.get(viewers));
+    if (views === app.get(viewers)) return ;
+    views = app.get(viewers);
+    io.emit('viewers', views);
 }, 2500);
 
 const clients = new Set();
@@ -45,9 +49,11 @@ io.on('connection', socket => {
     const mp4Seg: Mp4Segmenter = app.get(segmenter);
     app.set(viewers, app.get(viewers) + 1);
     console.log("User connected!", socket.id);
+    socket.emit('viewers', app.get(viewers));
     let eliminacion = setTimeout(() => {
         socket.disconnect();
     }, 5000);
+    let clientid: string;
     socket.on('clientId', (clientId) => {
         if (eliminacion) {
             clearTimeout(eliminacion);
@@ -65,6 +71,7 @@ io.on('connection', socket => {
             if (mp4Seg.initSegment !== null) socket.emit('start', data);
             clients.add(clientId);
         }
+        clientid = clientId;
     });
     const emitData: ((data: Buffer) => void) = data => {
         console.log(`Emitiendo data al socket ${socket.id}`);
@@ -79,6 +86,7 @@ io.on('connection', socket => {
     mp4Seg.on('data', emitData);
     socket.on('sendMessage', emitMessage);
     socket.on('disconnect', () => {
+        if (clientid) clients.delete(clientid);
         socket.removeListener('data', emitData);
         socket.removeListener('sendMessage', emitMessage);
         console.log("User disconnected", socket.id);
