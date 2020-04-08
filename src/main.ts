@@ -23,8 +23,10 @@ const server: https.Server | http.Server =  PROTOCOL === "HTTPS" ?
     cert: fs.readFileSync(path.resolve(os.homedir(), 'server.cert'))
 }, app) :
     new Server(app);
-const io : SocketIO.Server = SocketIO(server);
-io.origins(ORIGINS);
+const io : SocketIO.Server = SocketIO(server,
+    {
+        origins: ORIGINS
+    });
 const mp4Segmenter = new Mp4Segmenter();
 
 app.use(bodyParser.urlencoded({ extended: false }));
