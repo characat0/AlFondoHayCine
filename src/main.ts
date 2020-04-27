@@ -1,5 +1,4 @@
 import * as fs from "fs";
-import * as os from "os";
 import * as express from "express";
 import * as https from "https";
 import * as http from "http";
@@ -9,7 +8,7 @@ import * as SocketIO from "socket.io";
 import { indexRoute } from "./routes";
 import { apiRoute } from "./routes/api";
 import { Mp4Segmenter } from "./lib/Mp4Segmenter";
-import {ORIGINS, PORT, PROTOCOL} from "./config";
+import {CERT_FOLDER, ORIGINS, PORT, PROTOCOL} from "./config";
 import * as path from "path";
 import { Message } from "./lib/Message";
 import * as bodyParser from "body-parser";
@@ -19,9 +18,10 @@ const Server = PROTOCOL === "HTTPS" ? https.Server : http.Server;
 const app: Application = express();
 const server: https.Server | http.Server =  PROTOCOL === "HTTPS" ?
     new Server({
-    key: fs.readFileSync(path.resolve(os.homedir(), 'server.key')),
-    cert: fs.readFileSync(path.resolve(os.homedir(), 'server.cert'))
-}, app) :
+        key: fs.readFileSync(`/etc/letsencrypt/${CERT_FOLDER}/privkey.pem`),
+        cert: fs.readFileSync(`/etc/letsencrypt/${CERT_FOLDER}/fullchain.pem`),
+        ca: fs.readFileSync(`/etc/letsencrypt/${CERT_FOLDER}/chain.pem`)
+    }, app) :
     new Server(app);
 const io : SocketIO.Server = SocketIO(server,
     {
