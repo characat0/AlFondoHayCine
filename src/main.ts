@@ -18,9 +18,9 @@ const Server = PROTOCOL === "HTTPS" ? https.Server : http.Server;
 const app: Application = express();
 const server: https.Server | http.Server =  PROTOCOL === "HTTPS" ?
     new Server({
-        key: fs.readFileSync(`/etc/letsencrypt/${CERT_FOLDER}/privkey.pem`),
-        cert: fs.readFileSync(`/etc/letsencrypt/${CERT_FOLDER}/fullchain.pem`),
-        ca: fs.readFileSync(`/etc/letsencrypt/${CERT_FOLDER}/chain.pem`)
+        key: fs.readFileSync(`/etc/letsencrypt/live/${CERT_FOLDER}/privkey.pem`),
+        cert: fs.readFileSync(`/etc/letsencrypt/live/${CERT_FOLDER}/fullchain.pem`),
+        ca: fs.readFileSync(`/etc/letsencrypt/live/${CERT_FOLDER}/chain.pem`)
     }, app) :
     new Server(app);
 const io : SocketIO.Server = SocketIO(server,
